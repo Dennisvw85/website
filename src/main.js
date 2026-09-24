@@ -35,7 +35,7 @@ const form = document.getElementById('chat-form');
 const input = document.getElementById('chat-input');
 let previousResponseId = null;
 
-function bubble(who, text, src) {
+function bubble(who, text, src, meta) {
   const el = document.createElement('div');
   el.className = 'msg ' + who;
   // textContent, geen innerHTML: een antwoord van het model kan nooit HTML of scripts injecteren.
@@ -46,9 +46,23 @@ function bubble(who, text, src) {
     s.textContent = src;
     el.appendChild(s);
   }
+  if (meta) {
+    const m = document.createElement('span');
+    m.className = 'src meta';
+    m.textContent = meta;
+    el.appendChild(m);
+  }
   chat.appendChild(el);
   chat.scrollTop = chat.scrollHeight;
   return el;
+}
+
+function chatMeta(model, tokens, latencyMs) {
+  const parts = [];
+  if (model) parts.push(model);
+  if (tokens) parts.push(`${(tokens / 1000).toFixed(1)}k tokens`);
+  if (latencyMs) parts.push(`${(latencyMs / 1000).toFixed(1)} s`);
+  return parts.length ? parts.join(' · ') : undefined;
 }
 
 function typing() {
@@ -104,7 +118,7 @@ if (chat && form) {
       if (res.ok) {
         previousResponseId = data.response_id;
         const src = data.sources && data.sources.length ? `bron: ${data.sources.join(', ')}` : undefined;
-        bubble('bot', data.answer, src);
+        bubble('bot', data.answer, src, chatMeta(data.model, data.tokens, data.latency_ms));
         showFollowups(data.followups);
       } else {
         bubble('bot', data.error || 'Er ging iets mis. Probeer het zo nog eens.');

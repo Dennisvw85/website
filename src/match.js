@@ -53,7 +53,13 @@
     (d.interview_questions || []).forEach((q) => ol.append(el('li', '', q)));
     qs.append(ol);
 
-    out.append(head, list, qs, el('p', 'match-src', `bron: ${d.source === 'pdf' ? 'PDF via Content Understanding' : 'geplakte tekst'} · agent: cv-matcher · structured output`));
+    const srcLine = `bron: ${d.source === 'pdf' ? 'PDF via Content Understanding' : 'geplakte tekst'} · agent: cv-matcher · structured output`;
+    out.append(head, list, qs, el('p', 'match-src', d.shield === 'passed' ? `${srcLine} · gecontroleerd door Prompt Shields` : srcLine));
+
+    const printBtn = el('button', 'match-print', 'Download als PDF');
+    printBtn.type = 'button';
+    printBtn.addEventListener('click', () => window.print());
+    out.append(printBtn);
   }
 
   form.addEventListener('submit', async (e) => {
