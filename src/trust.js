@@ -25,4 +25,16 @@
     }
     box.append(el('p', 'match-src', `laatst gemeten: ${t.updated} · lager ASR = beter`));
   }).catch(() => box.append(el('p', 'match-summary', 'Resultaten zijn even niet beschikbaar.')));
+
+  // Derde kaart: live gebruik van de afgelopen 7 dagen, uit Application Insights.
+  fetch('/api/stats').then((r) => r.ok ? r.json() : Promise.reject()).then((s) => {
+    const statsCard = el('div', 'trust-card');
+    statsCard.append(el('span', 'trust-big', String(s.total)), el('span', 'trust-label', `verzoeken, afgelopen ${s.period_days} dagen`));
+    const l3 = el('ul', 'trust-list');
+    l3.append(el('li', 'ok', `chat: ${s.requests.chat}`));
+    l3.append(el('li', 'ok', `vacature-match: ${s.requests.match}`));
+    l3.append(el('li', 'ok', `spraak: ${s.requests.voice}`));
+    statsCard.append(l3);
+    box.append(statsCard);
+  }).catch(() => {});
 })();
