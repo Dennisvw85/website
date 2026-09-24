@@ -17,7 +17,8 @@
   <div class="bg" aria-hidden="true"><div class="glow"></div><div class="gridlines"></div><div class="noise"></div></div>
 
   <header class="nav">
-    <a class="mark" href="#top" aria-label="Naar boven">DvW<span>.</span></a><nav><a href="#expertise">Expertise</a><a href="#ervaring">Experience</a><a href="#certificeringen">Certifications</a><a href="#projecten">Projects</a><a href="#match">Vacancy check</a><a class="lang notranslate" href="index.html" hreflang="nl" lang="nl">NL</a><a href="https://github.com/Dennisvw85" class="nav-cta">GitHub</a>
+    <a class="mark" href="#top" aria-label="Naar boven">DvW<span>.</span></a><nav><a href="#expertise">Expertise</a><a href="#ervaring">Experience</a><a href="#certificeringen">Certifications</a><a href="#projecten">Projects</a><a href="#match">Vacancy Check</a><a href="#vertrouwen">Trust</a><a class="lang notranslate" href="en.html" hreflang="en" lang="en">EN</a><a href="https://github.com/Dennisvw85" class="nav-cta">GitHub</a>
+      
       
       
       
@@ -205,6 +206,13 @@
           </div>
         </li>
       </ol>
+
+        <!-- TIMELINE:START -->
+        <figure class="timeline-img reveal">
+          <img src="img/timeline.png" alt="Tijdlijngrafiek van de loopbaan van Dennis van Waas, chronologisch: Emjee ICT, Avanade, Pink Elephant, Wortell, RawWorks." loading="lazy" />
+          <figcaption>Career in one image, drawn by the Code Interpreter tool from Microsoft Foundry.</figcaption>
+        </figure>
+        <!-- TIMELINE:END -->
     </section>
 
     <!-- CERTIFICERINGEN + OPLEIDING -->
@@ -296,6 +304,20 @@
       </form>
       <div class="match-result" id="match-result" aria-live="polite" hidden></div>
     </section>
+
+    <section id="vertrouwen" class="wrap section">
+      <p class="label reveal">06 · Trust</p>
+      <h2 class="reveal">How reliable is <em>this AI</em>?</h2>
+      <p class="project-note reveal">An officer who talks about someone must remain honest, respect privacy and not be misled. That is not promised here, but measured: with its own evaluation set and an automated attack scan of the AI Red Teaming Agent in Microsoft Foundry.</p>
+      <div class="trust" id="trust"></div>
+      <ul class="guardrails reveal">
+        <li><strong>Content filters and Prompt Shields</strong> from Foundry block malicious queries and jailbreaks before the agent.</li>
+        <li><strong>Instructions with hard limits:</strong> no personal data, no speculation, no customer names.</li>
+        <li><strong>Keyless:</strong> no API keys; only managed identities with minimal permissions.</li>
+        <li><strong>Cost brakes:</strong> Native token limit per feature, maximum calls, and duration.</li>
+        <li><strong>Tracing:</strong> Every conversation can be seen in Application Insights.</li>
+      </ul>
+    </section>
   
 
   <footer class="wrap footer">
@@ -306,5 +328,6 @@
   <script src="main.js" defer></script>
   <script src="avatar.js" defer></script>
   <script src="match.js" defer></script>
+  <script src="trust.js" defer></script>
 </body>
 </html>

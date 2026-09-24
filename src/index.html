@@ -24,6 +24,7 @@
       <a href="#certificeringen">Certificeringen</a>
       <a href="#projecten">Projecten</a>
       <a href="#match">Vacature-check</a>
+      <a href="#vertrouwen">Vertrouwen</a>
       <a class="lang notranslate" href="en.html" hreflang="en" lang="en">EN</a>
       <a href="https://github.com/Dennisvw85" class="nav-cta">GitHub</a>
     </nav>
@@ -205,6 +206,13 @@
           </div>
         </li>
       </ol>
+
+        <!-- TIMELINE:START -->
+        <figure class="timeline-img reveal">
+          <img src="img/timeline.png" alt="Tijdlijngrafiek van de loopbaan van Dennis van Waas, chronologisch: Emjee ICT, Avanade, Pink Elephant, Wortell, RawWorks." loading="lazy" />
+          <figcaption>Loopbaan in één beeld, getekend door de Code Interpreter-tool van Microsoft Foundry.</figcaption>
+        </figure>
+        <!-- TIMELINE:END -->
     </section>
 
     <!-- CERTIFICERINGEN + OPLEIDING -->
@@ -296,6 +304,20 @@
       </form>
       <div class="match-result" id="match-result" aria-live="polite" hidden></div>
     </section>
+
+    <section id="vertrouwen" class="wrap section">
+      <p class="label reveal">06 · Vertrouwen</p>
+      <h2 class="reveal">Hoe betrouwbaar is <em>deze AI</em>?</h2>
+      <p class="project-note reveal">Een agent die over iemand praat moet eerlijk blijven, privacy respecteren en niet te misleiden zijn. Dat wordt hier niet beloofd maar gemeten: met een eigen evaluatieset en een geautomatiseerde aanvalsscan van de AI Red Teaming Agent in Microsoft Foundry.</p>
+      <div class="trust" id="trust"></div>
+      <ul class="guardrails reveal">
+        <li><strong>Content filters en Prompt Shields</strong> van Foundry blokkeren schadelijke vragen en jailbreaks vóór de agent.</li>
+        <li><strong>Instructies met harde grenzen:</strong> geen persoonsgegevens, geen speculatie, geen klantnamen.</li>
+        <li><strong>Keyless:</strong> geen API-keys; alleen managed identities met minimale rechten.</li>
+        <li><strong>Kostenremmen:</strong> eigen tokenlimiet per functie, maximale gesprekken en duur.</li>
+        <li><strong>Tracing:</strong> elk gesprek is terug te zien in Application Insights.</li>
+      </ul>
+    </section>
   </main>
 
   <footer class="wrap footer">
@@ -306,5 +328,6 @@
   <script src="main.js" defer></script>
   <script src="avatar.js" defer></script>
   <script src="match.js" defer></script>
+  <script src="trust.js" defer></script>
 </body>
 </html>

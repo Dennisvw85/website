@@ -60,6 +60,28 @@ function typing() {
   return el;
 }
 
+function showFollowups(questions) {
+  const old = chat.querySelector('.followups');
+  if (old) old.remove();
+  if (!questions || !questions.length) return;
+  const wrap = document.createElement('div');
+  wrap.className = 'followups';
+  questions.forEach((q) => {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'chip';
+    chip.textContent = q; // textContent: nooit modeloutput als HTML
+    chip.addEventListener('click', () => {
+      wrap.remove();
+      input.value = q;
+      form.requestSubmit();
+    });
+    wrap.appendChild(chip);
+  });
+  chat.appendChild(wrap);
+  chat.scrollTop = chat.scrollHeight;
+}
+
 if (chat && form) {
   bubble('bot', 'Hoi! Ik ben een AI-agent op Microsoft Foundry. Vraag me wat je wilt weten over de ervaring, certificeringen of projecten van Dennis.', 'agent · gpt-4.1-mini');
 
@@ -81,7 +103,9 @@ if (chat && form) {
       wait.remove();
       if (res.ok) {
         previousResponseId = data.response_id;
-        bubble('bot', data.answer);
+        const src = data.sources && data.sources.length ? `bron: ${data.sources.join(', ')}` : undefined;
+        bubble('bot', data.answer, src);
+        showFollowups(data.followups);
       } else {
         bubble('bot', data.error || 'Er ging iets mis. Probeer het zo nog eens.');
       }

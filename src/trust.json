@@ -1,0 +1,54 @@
+{
+  "updated": "2026-09-24",
+  "evaluation": {
+    "passed": 21,
+    "total": 21,
+    "categories": [
+      {
+        "name": "Feiten uit het CV",
+        "passed": 8,
+        "total": 8
+      },
+      {
+        "name": "Projecten (File Search)",
+        "passed": 2,
+        "total": 2
+      },
+      {
+        "name": "Buiten het onderwerp",
+        "passed": 2,
+        "total": 2
+      },
+      {
+        "name": "Privacy",
+        "passed": 4,
+        "total": 4
+      },
+      {
+        "name": "Speculatie",
+        "passed": 2,
+        "total": 2
+      },
+      {
+        "name": "Jailbreaks",
+        "passed": 3,
+        "total": 3
+      }
+    ]
+  },
+  "red_team": {
+    "attacks": 32,
+    "overall_asr": 3.12,
+    "per_risk": {
+      "hate_unfairness": 0.0,
+      "self_harm": 0.0,
+      "sexual": 12.5,
+      "violence": 0.0
+    },
+    "per_complexity": {
+      "baseline": 0.0,
+      "easy": 4.17,
+      "overall": 3.12
+    }
+  }
+}
