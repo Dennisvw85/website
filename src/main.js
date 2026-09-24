@@ -94,4 +94,111 @@ if (chat && form) {
     }
   });
 }
+// Spraakgesprek met dezelfde agent: WebRTC rechtstreeks met Voice Live in Azure.
+// De backend (/api/voice) doet alleen de handshake met zijn managed identity; de browser ziet nooit een token.
+const voiceBtn = document.getElementById('voice-btn');
+const voiceStatus = document.getElementById('voice-status');
+let call = null;
+
+function setVoiceStatus(text) {
+  voiceStatus.hidden = !text;
+  voiceStatus.textContent = text || '';
+}
+
+async function stopVoice(reason) {
+  if (!call) return;
+  const { pc, stream, audio, timer, sessionId } = call;
+  call = null;
+  clearInterval(timer);
+  stream.getTracks().forEach((t) => t.stop());
+  pc.close();
+  audio.remove();
+  voiceBtn.classList.remove('live');
+  voiceBtn.setAttribute('aria-label', 'Start spraakgesprek');
+  setVoiceStatus(reason || '');
+  if (sessionId) {
+    fetch('/api/voice/stop', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: sessionId }),
+    }).catch(() => {});
+  }
+}
+
+async function startVoice() {
+  setVoiceStatus('Verbinden…');
+  let stream;
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch {
+    setVoiceStatus('Geen toegang tot je microfoon.');
+    return;
+  }
+  const pc = new RTCPeerConnection();
+  stream.getTracks().forEach((t) => pc.addTrack(t, stream));
+  const audio = document.createElement('audio');
+  audio.autoplay = true;
+  document.body.appendChild(audio);
+  pc.ontrack = (e) => { audio.srcObject = e.streams[0]; };
+
+  // Transcripties van beide kanten komen binnen via het datakanaal en verschijnen als chatberichten.
+  const events = pc.createDataChannel('voice-live-events');
+  events.onmessage = (e) => {
+    let msg;
+    try { msg = JSON.parse(e.data); } catch { return; }
+    if (msg.type === 'conversation.item.input_audio_transcription.completed' && msg.transcript) {
+      bubble('user', msg.transcript.trim(), 'gesproken');
+    } else if (msg.type === 'response.audio_transcript.done' && msg.transcript) {
+      bubble('bot', msg.transcript.trim(), 'gesproken antwoord');
+    }
+  };
+  pc.onconnectionstatechange = () => {
+    if (pc.connectionState === 'failed' || pc.connectionState === 'closed') stopVoice('Gesprek beëindigd.');
+  };
+
+  await pc.setLocalDescription(await pc.createOffer());
+  await new Promise((resolve) => {
+    if (pc.iceGatheringState === 'complete') return resolve();
+    pc.onicegatheringstatechange = () => { if (pc.iceGatheringState === 'complete') resolve(); };
+    setTimeout(resolve, 3000);
+  });
+
+  let data;
+  try {
+    const res = await fetch('/api/voice', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sdp_offer: pc.localDescription.sdp }),
+    });
+    data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Spraak is even niet beschikbaar.');
+  } catch (err) {
+    stream.getTracks().forEach((t) => t.stop());
+    pc.close();
+    audio.remove();
+    setVoiceStatus(err.message);
+    return;
+  }
+  await pc.setRemoteDescription({ type: 'answer', sdp: data.sdp_answer });
+
+  let left = data.max_seconds || 180;
+  const timer = setInterval(() => {
+    left -= 1;
+    setVoiceStatus(`Luistert… stel je vraag hardop (nog ${left} s). Klik 🎙 om te stoppen.`);
+    if (left <= 0) stopVoice('Tijd is om. Klik 🎙 voor een nieuw gesprek.');
+  }, 1000);
+  call = { pc, stream, audio, timer, sessionId: data.session_id };
+  voiceBtn.classList.add('live');
+  voiceBtn.setAttribute('aria-label', 'Stop spraakgesprek');
+  setVoiceStatus(`Luistert… stel je vraag hardop (nog ${left} s). Klik 🎙 om te stoppen.`);
+}
+
+if (voiceBtn) {
+  if (!window.RTCPeerConnection || !navigator.mediaDevices) {
+    voiceBtn.hidden = true;
+  } else {
+    voiceBtn.addEventListener('click', () => (call ? stopVoice('Gesprek gestopt.') : startVoice()));
+  }
+}
+
 document.getElementById('year').textContent = new Date().getFullYear();
