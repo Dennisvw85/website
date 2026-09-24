@@ -23,5 +23,6 @@ jobs:
           action: upload
           app_location: src
           skip_app_build: true
-          # Aparte omgeving naast productie: de huidige site op main blijft ongemoeid.
-          deployment_environment: v2
+          # Alles wat niet van main komt, wordt een aparte omgeving met de naam van de branch (v2).
+          # De huidige site op main blijft zo ongemoeid.
+          production_branch: main
