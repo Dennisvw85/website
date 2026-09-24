@@ -365,3 +365,16 @@ h3 { font-size: 1.1rem; letter-spacing: -.01em; margin: 0 0 8px; font-weight: 60
 /* Live avatar */
 .avatar-stage { background: #0b0b0c; border-bottom: 1px solid var(--line); display: flex; justify-content: center; }
 .avatar-stage video { width: 100%; max-height: 360px; object-fit: contain; }
+
+/* Projecten */
+.project-note { color: var(--muted); font-size: .9rem; max-width: 60ch; margin-bottom: 24px; }
+.projects { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+.project { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--card); color: inherit; text-decoration: none; transition: transform .2s ease, border-color .2s ease; }
+.project:hover { transform: translateY(-3px); border-color: var(--fg); }
+.project img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
+.project-text { padding: 16px 18px 20px; }
+.project-text h3 { margin: 0 0 6px; }
+.project-text p { margin: 0 0 12px; color: var(--muted); font-size: .92rem; }
+.project-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.project-tags span { font: 500 .72rem var(--mono); padding: 3px 8px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { .project { transition: none; } }
