@@ -1,8 +1,8 @@
-name: Deploy naar Azure Static Web Apps
+name: Deploy v2 (staging-omgeving)
 
 on:
   push:
-    branches: [main]
+    branches: [v2]
   workflow_dispatch:
 
 # Minimale rechten: de workflow hoeft alleen de repo te lezen.
@@ -23,3 +23,5 @@ jobs:
           action: upload
           app_location: src
           skip_app_build: true
+          # Aparte omgeving naast productie: de huidige site op main blijft ongemoeid.
+          deployment_environment: v2
