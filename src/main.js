@@ -29,13 +29,13 @@ document.querySelectorAll('.tile').forEach((tile) => {
   });
 });
 
-// Voorbeeldgesprek in de hero. Een voorproefje van de CV-chatbot die nog komt.
+// Voorbeeldgesprek in de hero, een voorproefje van de CV-agent.
 const chat = document.getElementById('chat');
 const script = [
-  { who: 'user', text: 'Kan Dennis een agent bouwen die in Teams draait?' },
-  { who: 'bot', text: 'Ja. Voor Microsoft 365 en Teams bouwt hij in Copilot Studio, met kennisbronnen en flows erachter.', src: 'bron: diensten' },
-  { who: 'user', text: 'En als we eigen modellen of private networking nodig hebben?' },
-  { who: 'bot', text: 'Dan kiest hij Microsoft Foundry, met de infrastructuur als code in Bicep.', src: 'bron: diensten' },
+  { who: 'user', text: 'Wat doet Dennis nu?' },
+  { who: 'bot', text: 'Hij is AI Consultant bij RawWorks en bouwt multi-agent systemen met Copilot Studio en Azure AI Foundry.', src: 'bron: ervaring' },
+  { who: 'user', text: 'En welke certificeringen heeft hij?' },
+  { who: 'bot', text: 'Onder andere Microsoft 365 Administrator Expert, AZ-104 en AI Transformation Leader. Twaalf in totaal.', src: 'bron: certificeringen' },
 ];
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
