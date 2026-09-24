@@ -23,6 +23,7 @@
       <a href="#ervaring">Ervaring</a>
       <a href="#certificeringen">Certificeringen</a>
       <a href="#projecten">Projecten</a>
+      <a href="#match">Vacature-check</a>
       <a href="https://github.com/Dennisvw85" class="nav-cta">GitHub</a>
     </nav>
     <button class="theme" type="button" aria-label="Wissel licht en donker">
@@ -276,6 +277,24 @@
         <!-- PROJECTS:END -->
       </div>
     </section>
+
+    <section id="match" class="wrap section">
+      <p class="label reveal">05 · Vacature-check</p>
+      <h2 class="reveal">Past Dennis bij <em>jouw vacature</em>?</h2>
+      <p class="project-note reveal">Plak een vacaturetekst of upload een PDF. Azure Content Understanding leest de PDF, een Foundry-agent vergelijkt de eisen met het CV en de GitHub-repo's, en geeft per eis het bewijs. Eerlijk: ontbreekt iets, dan staat het er.</p>
+
+      <form class="match-form reveal" id="match-form">
+        <textarea id="match-text" rows="7" maxlength="12000" placeholder="Plak hier de vacaturetekst…" aria-label="Vacaturetekst"></textarea>
+        <div class="match-actions">
+          <label class="match-file">
+            <input type="file" id="match-pdf" accept="application/pdf" />
+            <span id="match-file-label">of upload een PDF</span>
+          </label>
+          <button type="submit" id="match-btn">Check de match</button>
+        </div>
+      </form>
+      <div class="match-result" id="match-result" aria-live="polite" hidden></div>
+    </section>
   </main>
 
   <footer class="wrap footer">
@@ -285,5 +304,6 @@
 
   <script src="main.js" defer></script>
   <script src="avatar.js" defer></script>
+  <script src="match.js" defer></script>
 </body>
 </html>
