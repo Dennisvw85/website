@@ -54,9 +54,13 @@
         <div class="chat-head">
           <span class="lights"><i></i><i></i><i></i></span>
           <span class="chat-title">vraag-mijn-cv · agent</span>
-          <span class="badge">binnenkort</span>
+          <span class="badge">live</span>
         </div>
-        <div class="chat-body" id="chat"></div>
+        <div class="chat-body" id="chat" aria-live="polite"></div>
+        <form class="chat-form" id="chat-form" autocomplete="off">
+          <input id="chat-input" type="text" maxlength="500" placeholder="Stel een vraag over mijn ervaring…" aria-label="Je vraag" required />
+          <button type="submit" aria-label="Verstuur">↑</button>
+        </form>
       </div>
     </section>
 

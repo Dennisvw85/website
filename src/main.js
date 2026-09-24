@@ -29,43 +29,69 @@ document.querySelectorAll('.tile').forEach((tile) => {
   });
 });
 
-// Voorbeeldgesprek in de hero, een voorproefje van de CV-agent.
+// Live chat met de CV-agent: POST /api/chat, doorgestuurd naar de Function App.
 const chat = document.getElementById('chat');
-const script = [
-  { who: 'user', text: 'Wat doet Dennis nu?' },
-  { who: 'bot', text: 'Hij is AI Consultant bij RawWorks en bouwt multi-agent systemen met Copilot Studio en Azure AI Foundry.', src: 'bron: ervaring' },
-  { who: 'user', text: 'En welke certificeringen heeft hij?' },
-  { who: 'bot', text: 'Onder andere Microsoft 365 Administrator Expert, AZ-104 en AI Transformation Leader. Twaalf in totaal.', src: 'bron: certificeringen' },
-];
+const form = document.getElementById('chat-form');
+const input = document.getElementById('chat-input');
+let previousResponseId = null;
 
-const wait = (ms) => new Promise((r) => setTimeout(r, ms));
-
-function bubble(who, html) {
+function bubble(who, text, src) {
   const el = document.createElement('div');
   el.className = 'msg ' + who;
-  el.innerHTML = html;
+  // textContent, geen innerHTML: een antwoord van het model kan nooit HTML of scripts injecteren.
+  el.textContent = text;
+  if (src) {
+    const s = document.createElement('span');
+    s.className = 'src';
+    s.textContent = src;
+    el.appendChild(s);
+  }
   chat.appendChild(el);
+  chat.scrollTop = chat.scrollHeight;
   return el;
 }
 
-async function play() {
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  while (true) {
-    chat.innerHTML = '';
-    for (const m of script) {
-      if (m.who === 'bot') {
-        const t = bubble('bot', '<span class="typing"><i></i><i></i><i></i></span>');
-        await wait(reduce ? 0 : 1100);
-        t.innerHTML = m.text + '<span class="src">' + m.src + '</span>';
-      } else {
-        bubble('user', m.text);
-      }
-      await wait(reduce ? 0 : 1300);
-    }
-    if (reduce) return;
-    await wait(4500);
-  }
+function typing() {
+  const el = document.createElement('div');
+  el.className = 'msg bot';
+  el.innerHTML = '<span class="typing"><i></i><i></i><i></i></span>';
+  chat.appendChild(el);
+  chat.scrollTop = chat.scrollHeight;
+  return el;
 }
 
-if (chat) play();
+if (chat && form) {
+  bubble('bot', 'Hoi! Ik ben een AI-agent op Microsoft Foundry. Vraag me wat je wilt weten over de ervaring, certificeringen of projecten van Dennis.', 'agent · gpt-4.1-mini');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const message = input.value.trim();
+    if (!message) return;
+    input.value = '';
+    input.disabled = true;
+    bubble('user', message);
+    const wait = typing();
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message, previous_response_id: previousResponseId }),
+      });
+      const data = await res.json().catch(() => ({}));
+      wait.remove();
+      if (res.ok) {
+        previousResponseId = data.response_id;
+        bubble('bot', data.answer);
+      } else {
+        bubble('bot', data.error || 'Er ging iets mis. Probeer het zo nog eens.');
+      }
+    } catch {
+      wait.remove();
+      bubble('bot', 'Geen verbinding met de assistent. Probeer het zo nog eens.');
+    } finally {
+      input.disabled = false;
+      input.focus();
+    }
+  });
+}
 document.getElementById('year').textContent = new Date().getFullYear();
