@@ -56,9 +56,13 @@
           <span class="chat-title">vraag-mijn-cv · agent</span>
           <span class="badge">live</span>
         </div>
+        <div class="avatar-stage" id="avatar-stage" hidden>
+          <video id="avatar-video" autoplay playsinline></video>
+        </div>
         <div class="chat-body" id="chat" aria-live="polite"></div>
         <form class="chat-form" id="chat-form" autocomplete="off">
           <input id="chat-input" type="text" maxlength="500" placeholder="Stel een vraag over mijn ervaring…" aria-label="Je vraag" required />
+          <button type="button" id="avatar-btn" class="voice" aria-label="Start gesprek met avatar" title="Praat met de avatar">🧑‍💼</button>
           <button type="button" id="voice-btn" class="voice" aria-label="Start spraakgesprek" title="Praat met de agent">🎙</button>
           <button type="submit" aria-label="Verstuur">↑</button>
         </form>
@@ -243,5 +247,6 @@
   </footer>
 
   <script src="main.js" defer></script>
+  <script src="avatar.js" defer></script>
 </body>
 </html>
