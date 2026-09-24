@@ -166,5 +166,11 @@
     ws.onclose = () => stop('Gesprek beëindigd.');
   }
 
-  btn.addEventListener('click', () => (s ? stop('Gesprek gestopt.') : start()));
+  btn.addEventListener('click', () => {
+    if (s) return stop('Gesprek gestopt.');
+    // Nooit twee gesprekken tegelijk: stop eerst de gewone spraak (🎙) als die loopt.
+    const voiceBtn = document.getElementById('voice-btn');
+    if (voiceBtn && voiceBtn.classList.contains('live')) voiceBtn.click();
+    start();
+  });
 })();

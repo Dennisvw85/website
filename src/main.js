@@ -197,7 +197,13 @@ if (voiceBtn) {
   if (!window.RTCPeerConnection || !navigator.mediaDevices) {
     voiceBtn.hidden = true;
   } else {
-    voiceBtn.addEventListener('click', () => (call ? stopVoice('Gesprek gestopt.') : startVoice()));
+    voiceBtn.addEventListener('click', () => {
+      if (call) return stopVoice('Gesprek gestopt.');
+      // Nooit twee gesprekken tegelijk: stop eerst de avatar (🧑‍💼) als die loopt.
+      const avatarBtn = document.getElementById('avatar-btn');
+      if (avatarBtn && avatarBtn.classList.contains('live')) avatarBtn.click();
+      startVoice();
+    });
   }
 }
 
