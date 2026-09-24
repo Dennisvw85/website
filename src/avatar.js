@@ -6,6 +6,7 @@
   const btn = document.getElementById('avatar-btn');
   const stage = document.getElementById('avatar-stage');
   const video = document.getElementById('avatar-video');
+  const voice = document.getElementById('avatar-audio');
   const statusEl = document.getElementById('voice-status');
   if (!btn || !stage || !window.RTCPeerConnection || !window.AudioWorkletNode) {
     if (btn) btn.hidden = true;
@@ -34,6 +35,7 @@
     pc && pc.close();
     if (ws && ws.readyState <= 1) ws.close();
     video.srcObject = null;
+    voice.srcObject = null;
     stage.hidden = true;
     btn.classList.remove('live');
     btn.setAttribute('aria-label', 'Start gesprek met avatar');
@@ -44,7 +46,20 @@
     const pc = new RTCPeerConnection({ iceServers });
     pc.addTransceiver('video', { direction: 'sendrecv' });
     pc.addTransceiver('audio', { direction: 'sendrecv' });
-    pc.ontrack = (e) => { video.srcObject = e.streams[0]; video.play().catch(() => {}); };
+    // Zoals Microsofts sample: elke track een eigen element. Met één element voor beide
+    // overschreef de tweede track de eerste, en bleef de avatar stil "ademen".
+    pc.ontrack = (e) => {
+      const only = new MediaStream([e.track]);
+      if (e.track.kind === 'video') {
+        video.muted = true;
+        video.srcObject = only;
+        video.play().catch(() => {});
+      } else {
+        voice.srcObject = only;
+        voice.play().catch(() => {});
+      }
+    };
+    pc.createDataChannel('eventChannel');
     await pc.setLocalDescription(await pc.createOffer());
     await new Promise((r) => setTimeout(r, 2000)); // ICE-kandidaten verzamelen, zoals in de sample
     ws.send(JSON.stringify({
